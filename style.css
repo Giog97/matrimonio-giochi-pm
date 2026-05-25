@@ -1,0 +1,273 @@
+/* ════════════════════════════════════════════════
+   MATRIMONIO PIETRO & MARTINA — GIOCHI
+   Stili condivisi: palette, font, componenti base
+   ════════════════════════════════════════════════ */
+
+/* ─── Font Diphylleia (Google) caricato in HTML ─── */
+/* ─── Font Brittany Signature caricato in HTML ─── */
+
+/* ─── Design Tokens (stessa palette del sito principale) ─── */
+:root {
+  --cream: #F7F0E3;
+  --parchment: #EDE0C4;
+  --warm-white: #FDFAF4;
+  --gold: #C8943A;
+  --gold-light: #E0BC72;
+  --gold-dark: #A07828;
+  --rust: #9E3D22;
+  --rust-dark: #722B18;
+  --terracotta: #C05828;
+  --olive: #6A6B38;
+  --brown: #5A3C2C;
+  --brown-dark: #3A2418;
+  --text-dark: #251810;
+  --text-mid: #5A3C2C;
+  --text-light: #8A6850;
+  --section-a: #FAF5EB;
+  --section-b: #F2E8D4;
+  --section-c: #1E130C;
+}
+
+/* ─── Reset ─── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: 'Diphylleia', Georgia, serif;
+  background: var(--warm-white);
+  color: var(--text-dark);
+  overflow-x: hidden;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.brittany {
+  font-family: 'Brittany Signature', 'Brittany', cursive;
+  font-style: normal;
+  font-weight: normal;
+}
+
+/* ─── Foglie cadenti (canvas, riprende il sito principale) ─── */
+#leaves-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ─── Header con pulsante indietro (per le pagine gioco) ─── */
+.game-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: linear-gradient(180deg, var(--section-c) 0%, var(--brown-dark) 100%);
+  padding: .75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  border-bottom: 1px solid rgba(200, 148, 58, .25);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, .15);
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  background: rgba(200, 148, 58, .12);
+  border: 1px solid rgba(200, 148, 58, .35);
+  color: var(--gold-light);
+  font-family: 'Diphylleia', serif;
+  font-size: .82rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: .5rem .9rem;
+  border-radius: 50px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background .2s, transform .15s;
+  white-space: nowrap;
+}
+
+.back-btn:hover,
+.back-btn:active {
+  background: rgba(200, 148, 58, .25);
+  transform: translateX(-2px);
+}
+
+.back-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.game-title {
+  flex: 1;
+  text-align: center;
+  font-family: 'Brittany Signature', 'Brittany', cursive;
+  font-style: normal;
+  font-size: clamp(1.4rem, 5vw, 1.9rem);
+  color: var(--gold-light);
+  line-height: 1;
+  padding-right: 2.5rem;
+  /* offset per centrare visivamente con il back-btn */
+}
+
+/* ─── Bottoni primari (gradiente gold/terracotta) ─── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .6rem;
+  background: linear-gradient(135deg, var(--gold-dark) 0%, var(--terracotta) 100%);
+  color: #fff;
+  font-family: 'Diphylleia', Georgia, serif;
+  font-size: clamp(.95rem, 2.4vw, 1.1rem);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  padding: .9rem 2rem;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 22px rgba(160, 120, 40, .3);
+  transition: transform .22s, box-shadow .22s, filter .22s;
+  text-decoration: none;
+  line-height: 1;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.btn-primary:hover,
+.btn-primary:active {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 10px 30px rgba(160, 120, 40, .42), 0 0 0 4px rgba(200, 148, 58, .25);
+  filter: brightness(1.08);
+}
+
+.btn-primary:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+  transform: none;
+  filter: none;
+}
+
+/* ─── Bottoni secondari (rust outline) ─── */
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .6rem;
+  background: transparent;
+  color: var(--rust);
+  font-family: 'Diphylleia', Georgia, serif;
+  font-size: clamp(.9rem, 2.2vw, 1rem);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: .8rem 1.8rem;
+  border-radius: 50px;
+  border: 1.5px solid var(--rust);
+  cursor: pointer;
+  transition: background .2s, color .2s, transform .15s;
+  text-decoration: none;
+  line-height: 1;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.btn-secondary:hover,
+.btn-secondary:active {
+  background: var(--rust);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+/* ─── Titoli script (Brittany) ─── */
+.script-title {
+  font-family: 'Brittany Signature', 'Brittany', cursive;
+  font-style: normal;
+  color: var(--rust);
+  line-height: 1;
+}
+
+.gold-rule {
+  width: 90px;
+  height: 1.5px;
+  background: linear-gradient(to right, transparent, var(--gold), transparent);
+  margin: .9rem auto 2rem;
+}
+
+/* ─── Card generica ─── */
+.card {
+  background: var(--warm-white);
+  border: 1px solid rgba(200, 148, 58, .28);
+  border-radius: 18px;
+  padding: 1.5rem 1.3rem;
+  box-shadow: 0 6px 22px rgba(90, 60, 44, .08);
+}
+
+/* ─── Animazioni utility ─── */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(.7);
+    opacity: 0;
+  }
+
+  60% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.fade-up {
+  animation: fadeUp .7s ease both;
+}
+
+/* ─── Accessibilità — riduce motion ─── */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}

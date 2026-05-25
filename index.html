@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <meta name="theme-color" content="#1E130C" />
+  <title>Giochi del Matrimonio · Pietro &amp; Martina</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Diphylleia&display=swap" rel="stylesheet" />
+  <link href="https://fonts.cdnfonts.com/css/brittany-signature" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    /* ── Hero menu ── */
+    .menu-hero {
+      position: relative;
+      padding: 3rem 1.2rem 1.5rem;
+      text-align: center;
+      z-index: 1;
+    }
+
+    .menu-eyebrow {
+      font-family: 'Diphylleia', serif;
+      font-size: clamp(.7rem, 2.4vw, .85rem);
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--text-light);
+      margin-bottom: 1rem;
+    }
+
+    .menu-title {
+      font-family: 'Brittany Signature', 'Brittany', cursive;
+      font-style: normal;
+      font-size: clamp(2.8rem, 12vw, 4.5rem);
+      color: var(--rust);
+      line-height: .95;
+    }
+
+    .menu-couple {
+      font-family: 'Diphylleia', serif;
+      font-size: clamp(.85rem, 2.6vw, 1rem);
+      color: var(--text-mid);
+      letter-spacing: .24em;
+      text-transform: uppercase;
+      margin-top: 1.4rem;
+    }
+
+    .menu-sub {
+      font-family: 'Diphylleia', serif;
+      font-size: clamp(.95rem, 2.6vw, 1.05rem);
+      color: var(--text-mid);
+      line-height: 1.7;
+      max-width: 520px;
+      margin: 1.6rem auto 0;
+      padding: 0 .5rem;
+    }
+
+    /* ── Grid card giochi ── */
+    .games-grid {
+      position: relative;
+      z-index: 1;
+      max-width: 720px;
+      margin: 2.5rem auto 4rem;
+      padding: 0 1rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.1rem;
+    }
+
+    @media (min-width: 640px) {
+      .games-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 1.3rem;
+      }
+    }
+
+    .game-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 1.8rem 1.3rem 1.6rem;
+      background: var(--warm-white);
+      border: 1.5px solid rgba(200, 148, 58, .3);
+      border-radius: 22px;
+      text-decoration: none;
+      color: var(--text-dark);
+      box-shadow: 0 6px 22px rgba(90, 60, 44, .08);
+      transition: transform .25s, box-shadow .25s, border-color .25s;
+      overflow: hidden;
+      animation: fadeUp .7s ease both;
+    }
+
+    .game-card:nth-child(1) {
+      animation-delay: .05s;
+    }
+
+    .game-card:nth-child(2) {
+      animation-delay: .15s;
+    }
+
+    .game-card:nth-child(3) {
+      animation-delay: .25s;
+    }
+
+    .game-card:nth-child(4) {
+      animation-delay: .35s;
+    }
+
+    .game-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(200, 148, 58, .06) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .game-card:hover,
+    .game-card:active {
+      transform: translateY(-4px);
+      box-shadow: 0 14px 32px rgba(90, 60, 44, .18);
+      border-color: var(--gold);
+    }
+
+    .game-icon {
+      font-size: clamp(2.6rem, 10vw, 3.4rem);
+      margin-bottom: .8rem;
+      line-height: 1;
+      filter: drop-shadow(0 3px 8px rgba(90, 60, 44, .18));
+    }
+
+    .game-name {
+      font-family: 'Brittany Signature', 'Brittany', cursive;
+      font-style: normal;
+      font-size: clamp(1.7rem, 5.5vw, 2.1rem);
+      color: var(--rust);
+      line-height: 1;
+      margin-bottom: .4rem;
+    }
+
+    .game-desc {
+      font-family: 'Diphylleia', serif;
+      font-size: clamp(.85rem, 2.4vw, .95rem);
+      color: var(--text-mid);
+      line-height: 1.55;
+      margin-bottom: 1.2rem;
+      min-height: 2.9em;
+    }
+
+    .game-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      font-family: 'Diphylleia', serif;
+      font-size: .8rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--gold-dark);
+      padding: .55rem 1.2rem;
+      border: 1px solid rgba(200, 148, 58, .5);
+      border-radius: 50px;
+      transition: background .2s, color .2s;
+    }
+
+    .game-card:hover .game-cta,
+    .game-card:active .game-cta {
+      background: var(--gold-dark);
+      color: #fff;
+      border-color: var(--gold-dark);
+    }
+
+    /* ── Footer ── */
+    .menu-footer {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 2rem 1.2rem 3rem;
+      font-family: 'Diphylleia', serif;
+      font-size: .78rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--text-light);
+      opacity: .7;
+    }
+
+    .menu-footer-script {
+      display: block;
+      font-family: 'Brittany Signature', 'Brittany', cursive;
+      font-style: normal;
+      font-size: 1.6rem;
+      letter-spacing: 0;
+      text-transform: none;
+      color: var(--gold-dark);
+      margin-bottom: .3rem;
+      opacity: 1;
+    }
+  </style>
+</head>
+
+<body>
+
+  <canvas id="leaves-canvas" aria-hidden="true"></canvas>
+
+  <header class="menu-hero">
+    <p class="menu-eyebrow">Festeggia con noi</p>
+    <h1 class="menu-title">Giochi del Matrimonio</h1>
+    <div class="gold-rule" style="margin: 1.2rem auto 0;"></div>
+    <p class="menu-couple">Pietro &amp; Martina · 24.10.2026</p>
+    <p class="menu-sub">
+      Scegli un gioco e divertiti con noi! Quattro mini-giochi pensati per allietare la serata.
+    </p>
+  </header>
+
+  <main class="games-grid" aria-label="Lista giochi">
+
+    <a href="memory.html" class="game-card">
+      <span class="game-icon" aria-hidden="true">🎴</span>
+      <h2 class="game-name">Memory</h2>
+      <p class="game-desc">Trova tutte le coppie nascoste nel minor tempo possibile.</p>
+      <span class="game-cta">Gioca →</span>
+    </a>
+
+    <a href="quiz.html" class="game-card">
+      <span class="game-icon" aria-hidden="true">❓</span>
+      <h2 class="game-name">Quiz sugli sposi</h2>
+      <p class="game-desc">Quanto conosci Pietro &amp; Martina? Mettiti alla prova!</p>
+      <span class="game-cta">Gioca →</span>
+    </a>
+
+    <a href="bouquet.html" class="game-card">
+      <span class="game-icon" aria-hidden="true">💐</span>
+      <h2 class="game-name">Acchiappa il bouquet</h2>
+      <p class="game-desc">Prendi tutto ciò che è prezioso, schiva le foglie d'autunno.</p>
+      <span class="game-cta">Gioca →</span>
+    </a>
+
+    <a href="bingo.html" class="game-card">
+      <span class="game-icon" aria-hidden="true">🎯</span>
+      <h2 class="game-name">Bingo della festa</h2>
+      <p class="game-desc">Completa le missioni durante la serata e fai BINGO!</p>
+      <span class="game-cta">Gioca →</span>
+    </a>
+
+  </main>
+
+  <footer class="menu-footer">
+    <span class="menu-footer-script">Buon divertimento</span>
+    Pietro &amp; Martina · 24 Ottobre 2026
+  </footer>
+
+  <script>
+    /* ── Falling Leaves (stesso effetto del sito principale) ── */
+    (function () {
+      const canvas = document.getElementById('leaves-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const SHAPES = ['🍂', '🍁', '🍃'];
+      const LEAVES = [];
+      const COUNT = window.innerWidth < 500 ? 16 : 26;
+
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      for (let i = 0; i < COUNT; i++) {
+        LEAVES.push({
+          x: Math.random() * window.innerWidth,
+          y: Math.random() * window.innerHeight * -1.5,
+          size: 12 + Math.random() * 18,
+          speed: .3 + Math.random() * .6,
+          drift: (Math.random() - .5) * .7,
+          rot: Math.random() * Math.PI * 2,
+          rotV: (Math.random() - .5) * .022,
+          emoji: SHAPES[Math.floor(Math.random() * SHAPES.length)],
+          alpha: .22 + Math.random() * .35,
+          swing: Math.random() * Math.PI * 2,
+          swingS: .35 + Math.random() * .55,
+        });
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        LEAVES.forEach(l => {
+          l.swing += .011 * l.swingS;
+          l.x += l.drift + Math.sin(l.swing) * .55;
+          l.y += l.speed;
+          l.rot += l.rotV;
+          if (l.y > canvas.height + 40) { l.y = -40; l.x = Math.random() * canvas.width; }
+          ctx.save();
+          ctx.translate(l.x, l.y);
+          ctx.rotate(l.rot);
+          ctx.globalAlpha = l.alpha;
+          ctx.font = `${l.size}px serif`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(l.emoji, 0, 0);
+          ctx.restore();
+        });
+        requestAnimationFrame(animate);
+      }
+      animate();
+    })();
+  </script>
+</body>
+
+</html>

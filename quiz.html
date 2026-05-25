@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <meta name="theme-color" content="#1E130C" />
+  <title>Quiz · Quanto conosci Pietro &amp; Martina?</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Diphylleia&display=swap" rel="stylesheet" />
+  <link href="https://fonts.cdnfonts.com/css/brittany-signature" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    .quiz-page {
+      max-width: 560px;
+      margin: 0 auto;
+      padding: 1rem 1.1rem 3rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Progress bar */
+    .progress-wrap {
+      margin: 1rem 0 1.6rem;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-family: 'Diphylleia', serif;
+      font-size: .7rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--text-light);
+      margin-bottom: .5rem;
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: rgba(200, 148, 58, .18);
+      border-radius: 50px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold-dark) 0%, var(--terracotta) 100%);
+      border-radius: 50px;
+      width: 0;
+      transition: width .4s ease;
+    }
+
+    /* Domanda */
+    .question-card {
+      background: var(--warm-white);
+      border: 1.5px solid rgba(200, 148, 58, .3);
+      border-radius: 20px;
+      padding: 1.6rem 1.3rem;
+      box-shadow: 0 6px 22px rgba(90, 60, 44, .08);
+      animation: fadeUp .5s ease both;
+    }
+
+    .question-number {
+      font-family: 'Brittany Signature', 'Brittany', cursive;
+      font-style: normal;
+      font-size: 1.8rem;
+      color: var(--gold-dark);
+      line-height: 1;
+      margin-bottom: .5rem;
+    }
+
+    .question-text {
+      font-family: 'Diphylleia', serif;
+      font-size: clamp(1.05rem, 3.4vw, 1.25rem);
+      color: var(--text-dark);
+      line-height: 1.5;
+      margin-bottom: 1.5rem;
+    }
+
+    .answers {
+      display: flex;
+      flex-direction: column;
+      gap: .7rem;
+    }
+
+    .answer-btn {
+      display: flex;
+      align-items: center;
+      gap: .8rem;
+      width: 100%;
+      background: var(--cream);
+      border: 1.5px solid rgba(200, 148, 58, .35);
+      border-radius: 14px;
+      padding: .95rem 1rem;
+      font-family: 'Diphylleia', serif;
+      font-size: clamp(.95rem, 2.6vw, 1.05rem);
+      color: var(--text-dark);
+      text-align: left;
+      cursor: pointer;
+      transition: background .2s, border-color .2s, transform .15s, color .2s;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .answer-btn:not(:disabled):hover,
+    .answer-btn:not(:disabled):active {
+      background: var(--warm-white);
+      border-color: var(--gold);
+      transform: translateY(-1px);
+    }
+
+    .answer-letter {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      width: 30px;
+      height: 30px;
+      background: var(--gold-dark);
+      color: #fff;
+      font-family: 'Diphylleia', serif;
+      font-size: .9rem;
+      border-radius: 50%;
+      font-weight: bold;
+    }
+
+    .answer-btn.correct {
+      background: rgba(106, 107, 56, .15);
+      border-color: var(--olive);
+      color: var(--olive);
+    }
+
+    .answer-btn.correct .answer-letter {
+      background: var(--olive);
+    }
+
+    .answer-btn.wrong {
+      background: rgba(158, 61, 34, .12);
+      border-color: var(--rust);
+      color: var(--rust);
+    }
+
+    .answer-btn.wrong .answer-letter {
+      background: var(--rust);
+    }
+
+    .answer-btn:disabled {
+      cursor: default;
+    }
+
+    /* Feedback emoji */
+    .feedback {
+      text-align: center;
+      margin-top: 1.2rem;
+      min-height: 2.4rem;
+      font-family: 'Brittany Signature', 'Brittany', cursive;
+      font-style: normal;
+      font-size: 1.6rem;
+      color: var(--rust);
+      opacity: 0;
+      transition: opacity .3s;
+    }
+
+    .feedback.show {
+      opacity: 1;
+    }
+
+    .next-btn-wrap {
+      text-align: center;
+      margin-top: 1.2rem;
+      min-height: 50px;
+    }
+
+    /* Schermata risultati */
+    .result-screen {
+      display: none;
+      text-align: center;
+      padding: 2rem 1rem;
+      animation: fadeUp .6s ease both;
+    }
+
+    .result-screen.show {
+      display: block;
+    }
+
+    .medal {
+      font-size: clamp(4rem, 18vw, 6rem);
+      line-height: 1;
+      margin-bottom: 1rem;
+      animation: pop .6s ease both;
+    }
+
+    .result-title {
+      font-family: 'Brittany Signature', 'Brittany', cursive;
+      font-style: normal;
+      font-size: clamp(2.5rem, 9vw, 3.4rem);
+      color: var(--rust);
+      line-height: 1;
+      margin-bottom: .5rem;
+    }
+
+    .result-rank {
+      font-family: 'Diphylleia', serif;
+      font-size: .85rem;
+      letter-spacing: .26em;
+      text-transform: uppercase;
+      color: var(--text-light);
+      margin-bottom: 1.5rem;
+    }
+
+    .result-score {
+      font-family: 'Diphylleia', serif;
+      font-size: clamp(2.4rem, 9vw, 3.4rem);
+      color: var(--gold-dark);
+      line-height: 1;
+      margin-bottom: .3rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .result-score-label {
+      font-family: 'Diphylleia', serif;
+      font-size: .8rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--text-light);
+      margin-bottom: 2rem;
+    }
+
+    .result-message {
+      font-family: 'Diphylleia', serif;
+      font-size: 1rem;
+      color: var(--text-mid);
+      line-height: 1.6;
+      max-width: 380px;
+      margin: 0 auto 2rem;
+      font-style: italic;
+    }
+
+    .result-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: .8rem;
+      align-items: center;
+    }
+
+    /* Quiz screen */
+    .quiz-screen {
+      display: block;
+    }
+
+    .quiz-screen.hidden {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <canvas id="leaves-canvas" aria-hidden="true"></canvas>
+
+  <header class="game-header">
+    <a href="index.html" class="back-btn" aria-label="Torna al menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+        stroke-linejoin="round" aria-hidden="true">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+      Menu
+    </a>
+    <h1 class="game-title">Quiz sugli sposi</h1>
+  </header>
+
+  <main class="quiz-page">
+
+    <!-- Schermo gioco -->
+    <div class="quiz-screen" id="quizScreen">
+      <div class="progress-wrap">
+        <div class="progress-label">
+          <span id="progLabel">Domanda 1</span>
+          <span id="progScore">Punteggio: 0</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progFill"></div>
+        </div>
+      </div>
+
+      <div class="question-card" id="questionCard">
+        <div class="question-number" id="qNum">Domanda 1</div>
+        <p class="question-text" id="qText">…</p>
+        <div class="answers" id="answers"></div>
+        <p class="feedback" id="feedback"></p>
+        <div class="next-btn-wrap" id="nextWrap"></div>
+      </div>
+    </div>
+
+    <!-- Schermo risultati -->
+    <div class="result-screen" id="resultScreen">
+      <div class="medal" id="medal">🥇</div>
+      <h2 class="result-title" id="resultTitle">Bravissimo!</h2>
+      <p class="result-rank" id="resultRank">Migliore amico</p>
+
+      <div class="result-score" id="finalScore">0/0</div>
+      <p class="result-score-label">Risposte corrette</p>
+
+      <p class="result-message" id="resultMessage">…</p>
+
+      <div class="result-buttons">
+        <button class="btn-primary" id="restartBtn">Rifai il quiz</button>
+        <a href="index.html" class="btn-secondary">← Altri giochi</a>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    /* ══════════════════════════════════════════════════════════
+       ⚠️  SOSTITUISCI QUESTE DOMANDE CON QUELLE REALI ⚠️
+       Ogni domanda ha:
+         - text: la domanda
+         - answers: array di 4 risposte
+         - correct: indice (0-3) della risposta giusta
+       ══════════════════════════════════════════════════════════ */
+    const QUESTIONS = [
+      {
+        text: 'Dove si sono conosciuti Pietro e Martina?', // SOSTITUISCI
+        answers: ['A scuola', 'In vacanza', 'Al lavoro', 'A una festa di amici'],
+        correct: 3
+      },
+      {
+        text: 'In che anno si sono fidanzati ufficialmente?', // SOSTITUISCI
+        answers: ['2018', '2019', '2020', '2021'],
+        correct: 1
+      },
+      {
+        text: 'Qual è la canzone "del cuore" della coppia?', // SOSTITUISCI
+        answers: ['Perfect — Ed Sheeran', 'La Cura — Battiato', 'Vivo per lei — Bocelli', 'A Thousand Years — C. Perri'],
+        correct: 0
+      },
+      {
+        text: 'Qual è la destinazione di viaggio più amata da entrambi?', // SOSTITUISCI
+        answers: ['Mare in Grecia', 'Montagna in Trentino', 'Tour della Toscana', 'Capitali europee'],
+        correct: 2
+      },
+      {
+        text: 'Qual è il piatto preferito di Pietro?', // SOSTITUISCI
+        answers: ['Bistecca alla fiorentina', 'Pasta al ragù', 'Pizza margherita', 'Risotto ai funghi'],
+        correct: 0
+      },
+      {
+        text: 'Qual è l\'hobby preferito di Martina?', // SOSTITUISCI
+        answers: ['Yoga', 'Lettura', 'Pittura', 'Giardinaggio'],
+        correct: 1
+      },
+      {
+        text: 'Come ha fatto Pietro la proposta di matrimonio?', // SOSTITUISCI
+        answers: ['A cena al ristorante', 'Durante un viaggio', 'A casa, con i fiori', 'A una festa con gli amici'],
+        correct: 1
+      },
+      {
+        text: 'Quanti anni stanno insieme al momento del matrimonio?', // SOSTITUISCI
+        answers: ['3 anni', '5 anni', '7 anni', '10 anni'],
+        correct: 2
+      },
+      {
+        text: 'Qual è il colore preferito di Martina?', // SOSTITUISCI
+        answers: ['Rosso', 'Verde salvia', 'Blu navy', 'Rosa cipria'],
+        correct: 1
+      },
+      {
+        text: 'Chi dei due cucina di più in casa?', // SOSTITUISCI
+        answers: ['Pietro', 'Martina', 'Entrambi insieme', 'Le pizzerie del paese'],
+        correct: 3
+      }
+    ];
+    /* ══════════════════════════════════════════════════════════
+       FINE SEZIONE DA PERSONALIZZARE
+       ══════════════════════════════════════════════════════════ */
+
+    /* ── Falling Leaves ── */
+    (function () {
+      const canvas = document.getElementById('leaves-canvas');
+      const ctx = canvas.getContext('2d');
+      const SHAPES = ['🍂', '🍁', '🍃'];
+      const LEAVES = [];
+      const COUNT = window.innerWidth < 500 ? 12 : 22;
+      function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+      resize();
+      window.addEventListener('resize', resize);
+      for (let i = 0; i < COUNT; i++) {
+        LEAVES.push({
+          x: Math.random() * window.innerWidth,
+          y: Math.random() * window.innerHeight * -1.5,
+          size: 12 + Math.random() * 18, speed: .3 + Math.random() * .6,
+          drift: (Math.random() - .5) * .7, rot: Math.random() * Math.PI * 2,
+          rotV: (Math.random() - .5) * .022,
+          emoji: SHAPES[Math.floor(Math.random() * SHAPES.length)],
+          alpha: .18 + Math.random() * .3,
+          swing: Math.random() * Math.PI * 2, swingS: .35 + Math.random() * .55,
+        });
+      }
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        LEAVES.forEach(l => {
+          l.swing += .011 * l.swingS;
+          l.x += l.drift + Math.sin(l.swing) * .55;
+          l.y += l.speed; l.rot += l.rotV;
+          if (l.y > canvas.height + 40) { l.y = -40; l.x = Math.random() * canvas.width; }
+          ctx.save(); ctx.translate(l.x, l.y); ctx.rotate(l.rot);
+          ctx.globalAlpha = l.alpha;
+          ctx.font = `${l.size}px serif`;
+          ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+          ctx.fillText(l.emoji, 0, 0); ctx.restore();
+        });
+        requestAnimationFrame(animate);
+      }
+      animate();
+    })();
+
+    /* ── Quiz Logic ── */
+    (function () {
+      const qNum = document.getElementById('qNum');
+      const qText = document.getElementById('qText');
+      const answersEl = document.getElementById('answers');
+      const feedback = document.getElementById('feedback');
+      const nextWrap = document.getElementById('nextWrap');
+      const progLabel = document.getElementById('progLabel');
+      const progScore = document.getElementById('progScore');
+      const progFill = document.getElementById('progFill');
+      const quizScreen = document.getElementById('quizScreen');
+      const resultScreen = document.getElementById('resultScreen');
+      const finalScore = document.getElementById('finalScore');
+      const medal = document.getElementById('medal');
+      const resultTitle = document.getElementById('resultTitle');
+      const resultRank = document.getElementById('resultRank');
+      const resultMessage = document.getElementById('resultMessage');
+      const restartBtn = document.getElementById('restartBtn');
+
+      const LETTERS = ['A', 'B', 'C', 'D'];
+      const POSITIVE = ['Esatto!', 'Bravo!', 'Perfetto!', 'Giusto!', 'Bingo!'];
+      const NEGATIVE = ['Quasi…', 'Niente da fare', 'Sbagliato', 'Ops!', 'Non ci siamo'];
+
+      let currentIdx = 0;
+      let score = 0;
+      let answered = false;
+
+      function showQuestion() {
+        answered = false;
+        const q = QUESTIONS[currentIdx];
+        qNum.textContent = `Domanda ${currentIdx + 1}`;
+        qText.textContent = q.text;
+        progLabel.textContent = `Domanda ${currentIdx + 1} di ${QUESTIONS.length}`;
+        progScore.textContent = `Punteggio: ${score}`;
+        progFill.style.width = `${(currentIdx / QUESTIONS.length) * 100}%`;
+
+        answersEl.innerHTML = '';
+        feedback.textContent = '';
+        feedback.classList.remove('show');
+        nextWrap.innerHTML = '';
+
+        q.answers.forEach((ans, i) => {
+          const btn = document.createElement('button');
+          btn.className = 'answer-btn';
+          btn.innerHTML = `<span class="answer-letter">${LETTERS[i]}</span><span>${ans}</span>`;
+          btn.addEventListener('click', () => onAnswer(i, btn));
+          answersEl.appendChild(btn);
+        });
+      }
+
+      function onAnswer(idx, btn) {
+        if (answered) return;
+        answered = true;
+        const q = QUESTIONS[currentIdx];
+        const allBtns = answersEl.querySelectorAll('.answer-btn');
+        allBtns.forEach((b, i) => {
+          b.disabled = true;
+          if (i === q.correct) b.classList.add('correct');
+          else if (i === idx) b.classList.add('wrong');
+        });
+
+        if (idx === q.correct) {
+          score++;
+          progScore.textContent = `Punteggio: ${score}`;
+          feedback.textContent = POSITIVE[Math.floor(Math.random() * POSITIVE.length)];
+        } else {
+          feedback.textContent = NEGATIVE[Math.floor(Math.random() * NEGATIVE.length)];
+        }
+        feedback.classList.add('show');
+        progFill.style.width = `${((currentIdx + 1) / QUESTIONS.length) * 100}%`;
+
+        // Mostra bottone "avanti" o "fine"
+        const isLast = currentIdx === QUESTIONS.length - 1;
+        const nextBtn = document.createElement('button');
+        nextBtn.className = 'btn-primary';
+        nextBtn.textContent = isLast ? 'Vedi risultato' : 'Prossima →';
+        nextBtn.addEventListener('click', () => {
+          if (isLast) showResults();
+          else { currentIdx++; showQuestion(); }
+        });
+        nextWrap.appendChild(nextBtn);
+      }
+
+      function showResults() {
+        quizScreen.classList.add('hidden');
+        resultScreen.classList.add('show');
+
+        const total = QUESTIONS.length;
+        const pct = score / total;
+
+        let medalEmoji, title, rank, msg;
+        if (pct >= 0.9) {
+          medalEmoji = '🥇';
+          title = 'Fantastico!';
+          rank = 'Migliore amico/a';
+          msg = 'Conosci Pietro e Martina meglio di loro stessi! Sei un pilastro della loro vita.';
+        } else if (pct >= 0.7) {
+          medalEmoji = '🥈';
+          title = 'Ottimo lavoro!';
+          rank = 'Amico/a stretto/a';
+          msg = 'Conosci davvero bene la coppia. Si vede che condividete tanti momenti insieme.';
+        } else if (pct >= 0.5) {
+          medalEmoji = '🥉';
+          title = 'Niente male!';
+          rank = 'Amico/a di vecchia data';
+          msg = 'Hai colto le cose essenziali. C\'è ancora qualche segreto da scoprire stasera!';
+        } else if (pct >= 0.3) {
+          medalEmoji = '🎖️';
+          title = 'Si può fare!';
+          rank = 'Invitato curioso';
+          msg = 'Non conosci tutti i dettagli, ma stasera è l\'occasione perfetta per conoscerli meglio.';
+        } else {
+          medalEmoji = '🍂';
+          title = 'Ah… ecco!';
+          rank = 'Invitato di cortesia';
+          msg = 'Forse è il momento di fare due chiacchiere con gli sposi. Approfittane stasera!';
+        }
+
+        medal.textContent = medalEmoji;
+        resultTitle.textContent = title;
+        resultRank.textContent = rank;
+        finalScore.textContent = `${score}/${total}`;
+        resultMessage.textContent = msg;
+      }
+
+      restartBtn.addEventListener('click', () => {
+        currentIdx = 0;
+        score = 0;
+        resultScreen.classList.remove('show');
+        quizScreen.classList.remove('hidden');
+        showQuestion();
+      });
+
+      showQuestion();
+    })();
+  </script>
+</body>
+
+</html>
